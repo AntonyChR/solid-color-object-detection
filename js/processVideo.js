@@ -1,13 +1,25 @@
-export default function processVideo($video, $canvas){
+export default function processVideo($video, $canvas, colorToDetect, tolerableRange){
     //color of the object to detect in RGB
-    const colorToDetect = { r: 255, g: 255, b: 0 };
+    
+    const $colorPicker = document.getElementById("select-color");
+    const $tolerableRange = document.getElementById("range");
+    $colorPicker.addEventListener("input", (e)=>{
+        let color = e.target.value;
+        colorToDetect.r= parseInt(color.substr(1,2), 16);
+        colorToDetect.g= parseInt(color.substr(3,2), 16);
+        colorToDetect.b= parseInt(color.substr(5,2), 16);
+    });
+
+    $tolerableRange.addEventListener("input", (e)=>{
+        tolerableRange = e.target.value;
+    });
+
     var context = canvas.getContext("2d");
     context.drawImage(video, 0, 0, 360, 360, 0, 0, $canvas.width, $canvas.height);
     var imgData = context.getImageData(0, 0, $canvas.width, $canvas.height);
     var pixels  = imgData.data;
 
-    var tolerableRange = 184,
-        xSum = 0,
+    var xSum = 0,
         ySum = 0,
         numPixelsFound = 0;
         
@@ -43,6 +55,6 @@ export default function processVideo($video, $canvas){
         context.fill();
     }
     setTimeout(() => {
-        processVideo($video, $canvas);
-    }, 20);
+        processVideo($video, $canvas, colorToDetect, tolerableRange);
+    }, 100);
 }

@@ -2,9 +2,11 @@ import processVideo from "./processVideo.js";
 
 const d = document;
 export default function webCam() {
-  var $video  = d.getElementById("video");
-  var $canvas = d.getElementById("canvas");
-
+  
+  const $video  = d.getElementById("video");
+  const $canvas = d.getElementById("canvas");
+  var colorToDetect = { r: 255, g:255, b:0 };
+  var tolerableRange = 150;
   const heightVid = 360;
   const widthVid  = 360;
   var options = {
@@ -20,7 +22,7 @@ export default function webCam() {
       .getUserMedia(options)
       .then((stream) => {
         $video.srcObject = stream;
-        processVideo($video, $canvas);
+        processVideo($video, $canvas,colorToDetect, tolerableRange);
       })
       .catch((error) => console.log("error: ", error));
   } else {
